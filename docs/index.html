@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SQLD 첫걸음</title>
+<meta name="description" content="SQLD(SQL 개발자) 시험 대비 학습 앱. 이론·SQL 실행·기출 유형·실전 모의고사·SQL 실습 채점.">
+<meta name="theme-color" content="#0e5a8a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SQLD">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  /* 화면 구성: 위 제목줄, 가운데 내용(홈·장·절·퀴즈·실습장·사용법), 아래 탭 3개 */
+  :root{
+    --bg:#f5f7fb; --surface:#fff; --fg:#1b2033; --muted:#5d6479; --line:#dde2ec;
+    --accent:#0e5a8a; --accent2:#2f6fdb; --accent-soft:#e8eef9; --on-accent:#fff;
+    --orange:#e8740c; --orange-soft:#fff3e6; --ok:#1f8a55; --ok-soft:#e1f4e9; --err:#c0392b; --err-soft:#fdecea;
+    --code-bg:#1e2333; --code-fg:#e6e8f2; --out-bg:#fff8ec; --tabbar:62px;
+    --mono:"D2Coding","Consolas","Menlo","Noto Sans Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --bg:#11141c; --surface:#1a1e29; --fg:#e6e8f2; --muted:#9aa1b6; --line:#2b3040;
+    --accent:#8fb0ff; --accent2:#8fb0ff; --accent-soft:#1f2a45; --on-accent:#0d1530;
+    --orange:#f0a050; --orange-soft:#35281a; --ok:#4fc489; --ok-soft:#153024; --err:#ff8a7a; --err-soft:#3a1f1a;
+    --out-bg:#2a2418; color-scheme:dark } }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font:15.5px/1.75 "Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;-webkit-tap-highlight-color:transparent;word-break:keep-all;overflow-wrap:anywhere}
+  button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+  a{color:var(--accent2)}
+  .top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px;display:flex;align-items:center;gap:8px}
+  .top h1{flex:1;min-width:0;margin:0;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .back{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:18px;flex:none}
+  .inst{display:flex;align-items:center;gap:8px;background:var(--accent-soft);border:1px solid var(--accent2);border-radius:12px;padding:8px 8px 8px 12px;font-size:13.5px;line-height:1.4;margin:10px 12px 0}
+  .inst .msg{flex:1;min-width:0}
+  .inst .go{flex:none;border:0;background:var(--accent2);color:#fff;border-radius:999px;padding:7px 14px;font-weight:700;font-size:13.5px}
+  .inst .x{flex:none;width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--muted)}
+  main{max-width:760px;margin:0 auto;padding:14px 14px calc(var(--tabbar) + 28px + env(safe-area-inset-bottom,0px))}
+  .stack{display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .muted{color:var(--muted)}
+  .bar{height:7px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:8px}
+  .bar i{display:block;height:100%;background:var(--ok);border-radius:4px}
+
+  .hero{background:linear-gradient(135deg,#0e5a8a,#2f6fdb);color:#fff;border-radius:18px;padding:20px 18px}
+  .hero h2{margin:0 0 4px;font-size:22px}
+  .hero p{margin:0;opacity:.93;font-size:14px}
+  .hero .bar{background:rgba(255,255,255,.25)} .hero .bar i{background:#fff}
+  .hero .cont{margin-top:14px;border:0;background:#fff;color:#0e5a8a;border-radius:12px;padding:11px 14px;font-weight:800;width:100%}
+  .chap{display:flex;gap:12px;align-items:center;text-align:left;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px}
+  .chap .no{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:800;background:var(--accent-soft);color:var(--accent2);font-size:15px}
+  .chap.done .no{background:var(--ok);color:#fff}
+  .chap .ct{flex:1;min-width:0}
+  .chap b{display:block;font-size:15.5px;line-height:1.45}
+  .chap small{display:block;color:var(--muted);font-size:12.5px}
+  .goals{background:var(--orange-soft);border-radius:14px;padding:12px 14px}
+  .goals h3{margin:0 0 4px;color:var(--orange);font-size:15px}
+  .goals ul{margin:0;padding-left:20px;font-size:14.5px}
+  .sec{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 14px}
+  .sec .k{flex:none;font-weight:800;color:var(--accent2);font-size:13px;min-width:36px}
+  .sec .t{flex:1}
+  .sec .ck{color:var(--ok);font-weight:800}
+  .qbtn{border:0;background:var(--orange);color:#fff;border-radius:14px;padding:13px;font-weight:800;font-size:15.5px;width:100%}
+
+  .lhead .k{font-size:12.5px;font-weight:700;color:var(--orange)}
+  .lhead h2{margin:2px 0 0;font-size:21px;line-height:1.4}
+  .body h3{font-size:16.5px;margin:20px 0 6px;color:var(--accent2)}
+  .body p{margin:8px 0}
+  .body ul,.body ol{margin:8px 0;padding-left:22px}
+  .body li+li{margin-top:3px}
+  .body code{font-family:var(--mono);font-size:.92em;background:var(--accent-soft);color:#b4441b;padding:1px 5px;border-radius:5px}
+  @media (prefers-color-scheme: dark){ .body code{color:#ffb38a} }
+  .tip{background:var(--accent-soft);border-radius:12px;padding:10px 12px;margin:12px 0;font-size:14.5px}
+  .warn{background:var(--err-soft);border-radius:12px;padding:10px 12px;margin:12px 0;font-size:14.5px}
+  .tbw{overflow-x:auto;margin:10px 0}
+  .tb{border-collapse:collapse;font-size:13.5px;background:var(--surface);min-width:100%}
+  .tb th,.tb td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  .tb th{background:var(--accent-soft);white-space:nowrap}
+  .tb code{white-space:nowrap}
+  pre.scr{background:#2b3040;color:#dfe3ee;border-radius:12px;padding:10px 12px;font:12.5px/1.6 var(--mono);overflow-x:auto;margin:12px 0}
+
+  /* 코드 상자: 고쳐서 실행 가능 */
+  .cb{margin:14px 0;border-radius:12px;overflow:hidden;border:1px solid #2b3040;background:var(--code-bg)}
+  .cb .hd{display:flex;align-items:center;gap:6px;padding:6px 8px 6px 12px;background:#161a27;color:#9fb0d6;font-size:12px;font-weight:700}
+  .cb .hd span{flex:1}
+  .cb .hd button{border:0;border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:700;background:#2b3247;color:#e6e8f2}
+  .cb .hd button.run{background:#2f6fdb;color:#fff}
+  .cb textarea{display:block;width:100%;border:0;outline:0;resize:none;background:transparent;color:var(--code-fg);font:13px/1.6 var(--mono);padding:10px 12px;white-space:pre;overflow-x:auto;overflow-y:hidden;tab-size:4}
+  .cb .out{background:var(--out-bg);color:var(--fg);border-top:2px solid var(--orange);padding:8px 12px;font:12.5px/1.6 var(--mono);white-space:pre-wrap;word-break:break-all;margin:0}
+  .cb .out .lb{display:block;font:700 11px/1.4 sans-serif;color:var(--orange);margin-bottom:2px;font-family:"Malgun Gothic",sans-serif}
+  .cb .out.err{color:var(--err)}
+
+  .quiz h3{margin:0 0 8px}
+  .qq{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+  .qq:first-of-type{border-top:0;margin-top:0;padding-top:0}
+  .qq p{margin:0 0 8px;font-weight:700}
+  .qo{display:flex;flex-direction:column;gap:6px}
+  .qo button{text-align:left;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 12px;font-size:15px}
+  .qo button.right{border-color:var(--ok);background:var(--ok-soft)}
+  .qo button.wrong{border-color:var(--err);background:var(--err-soft)}
+  .qo button:disabled{cursor:default;color:inherit}
+  .qo code,.qq code{font-family:var(--mono);font-size:.92em}
+  .qe{margin-top:8px;font-size:14px;border-radius:10px;padding:8px 10px}
+  .qe.ok{background:var(--ok-soft)} .qe.no{background:var(--err-soft)}
+  .qres{margin-top:12px;text-align:center;font-weight:800;font-size:16px}
+  .nav2{display:flex;gap:8px}
+  .nav2 button{flex:1;height:50px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:15px}
+  .nav2 button.pri{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  .btnw{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;font-weight:700;width:100%}
+  .help h3{margin:0 0 6px;font-size:16px;color:var(--accent2)}
+  .help ul,.help ol{margin:0;padding-left:20px;font-size:14.5px}
+  .status{font-size:13px;color:var(--muted);text-align:center}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .tabs a{height:var(--tabbar);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none}
+  .tabs a span{font-size:20px;line-height:1.1}
+  .tabs a.on{color:var(--accent2)}
+  /* SQL 결과 표 */
+  .rt{overflow-x:auto;background:var(--out-bg);border-top:2px solid var(--orange);padding:6px 10px 8px}
+  .rt .lb{display:block;font:700 11px/1.6 "Malgun Gothic",sans-serif;color:var(--orange)}
+  .rt table{border-collapse:collapse;font:12.5px/1.5 var(--mono);color:var(--fg);margin:2px 0 6px}
+  .rt th,.rt td{border:1px solid var(--line);padding:2px 8px;text-align:left;white-space:nowrap}
+  .rt th{background:var(--accent-soft)}
+  .rt td.nl{color:var(--muted);font-style:italic}
+  .rt .msg{font:12.5px/1.6 var(--mono);color:var(--fg)}
+  .rt .err{font:12.5px/1.6 var(--mono);color:var(--err)}
+  .rt small{color:var(--muted);font-size:11.5px}
+  /* 모의고사 */
+  .exam-top{position:sticky;top:56px;z-index:4;background:var(--bg);display:flex;align-items:center;gap:8px;padding:6px 0}
+  .exam-top .tm{font-weight:800;font-variant-numeric:tabular-nums;color:var(--accent2)}
+  .exam-top .pg{flex:1;font-size:13px;color:var(--muted)}
+  .score{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+  .score div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 4px}
+  .score b{display:block;font-size:22px}
+  .pass{font-size:20px;font-weight:800;text-align:center;padding:10px;border-radius:12px}
+  .pass.ok{background:var(--ok-soft);color:var(--ok)} .pass.no{background:var(--err-soft);color:var(--err)}
+  .qnav{display:flex;flex-wrap:wrap;gap:4px}
+  .qnav button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:12px;padding:0}
+  .qnav button.done{background:var(--accent-soft);border-color:var(--accent2)}
+  .qnav button.right{background:var(--ok-soft);border-color:var(--ok)} .qnav button.wrong{background:var(--err-soft);border-color:var(--err)}
+  .taskh{display:flex;gap:6px;flex-wrap:wrap}
+  .taskh button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 10px;font-size:12.5px}
+  .taskh button.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .taskh button.ok::after{content:" ✓";color:var(--ok);font-weight:800}
+  .taskh button.on.ok::after{color:#fff}
+  .toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;z-index:9;max-width:90%;text-align:center}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="back" id="back" aria-label="뒤로" hidden>←</button>
+  <h1 id="title">SQLD 첫걸음</h1>
+</header>
+<div class="inst" id="inst" hidden><span class="msg" id="instMsg"></span><button class="go" id="instGo">설치</button><button class="x" id="instX" aria-label="닫기">✕</button></div>
+<main id="view">
+  <div class="card"><b>이 화면에서는 앱이 작동하지 않아요.</b><br>Chrome이나 Safari에서 <b>sinaboro.github.io/sqld-learning-app-</b> 을 열어 주세요.</div>
+</main>
+<nav class="tabs">
+  <a href="#/" data-tab="home"><span>📚</span>학습</a>
+  <a href="#/exam" data-tab="exam"><span>📝</span>모의고사</a><a href="#/play" data-tab="play"><span>💻</span>SQL 실습</a>
+  <a href="#/help" data-tab="help"><span>❓</span>사용법</a>
+</nav>
+<div class="toast" id="toast" hidden></div>
+<script src="content.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+# 빌드 중 생기는 파일
+build/
+tools/.cache/
+__pycache__/
