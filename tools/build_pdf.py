@@ -32,7 +32,7 @@ CACHE = os.path.join(ROOT, 'tools', '.cache')
 D2_URL = 'https://github.com/naver/d2codingfont/releases/download/VER1.3.2/D2Coding-Ver1.3.2-20180524.zip'
 TITLE = 'SQLD 학습 교안'
 N_EX = N_Q = 0
-APP_URL = 'https://sinaboro.github.io/sqld-learning-app-/'
+APP_URL = 'https://sinaboro.github.io/sqld-learning-app/'
 
 # ───────── 글꼴 ─────────
 def fonts():

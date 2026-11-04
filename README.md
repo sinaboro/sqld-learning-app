@@ -6,7 +6,7 @@ SQLD(SQL 개발자) 시험을 처음 준비하는 사람을 위한 **학습 교�
 | 자료 | 위치 |
 |---|---|
 | 📄 학습 교안 (PDF, 89쪽) | [SQLD_학습교안.pdf](SQLD_학습교안.pdf) |
-| 📱 학습 앱 | **https://sinaboro.github.io/sqld-learning-app-/** |
+| 📱 학습 앱 | **https://sinaboro.github.io/sqld-learning-app/** |
 | 🗄️ 예제 DB (EMP·DEPT·SALGRADE) | [guide/sample_db.sql](guide/sample_db.sql) |
 
 ## 목차
@@ -36,7 +36,7 @@ SQLD(SQL 개발자) 시험을 처음 준비하는 사람을 위한 **학습 교�
 - ROLLUP·CUBE, CONNECT BY, PIVOT, MERGE, ROWNUM, (+) 외부 조인 같은 **오라클 전용 문법**은 SQLite 에서 실행되지 않아요. 교안·앱 모두 그런 예제 바로 아래에 **같은 결과를 내는 표준 SQL**(UNION ALL, WITH RECURSIVE, CASE, ON CONFLICT, ROW_NUMBER, LEFT JOIN)을 함께 실었어요.
 
 ### 설치 방법 (가장 쉬운 방법: 카카오톡)
-1. 카카오톡으로 받은 링크 `https://sinaboro.github.io/sqld-learning-app-/` 를 누릅니다.
+1. 카카오톡으로 받은 링크 `https://sinaboro.github.io/sqld-learning-app/` 를 누릅니다.
 2. 앱이 **자동으로 Chrome(아이폰은 Safari)으로 넘어갑니다.** 안 넘어가면 위쪽 안내의 **[Chrome으로 열기]** 를 누릅니다.
 3. 화면 위쪽 **"홈 화면에 앱으로 설치하면…"** 안내의 **[설치]** → 확인 창에서 **설치**.
    - 안내가 안 보이면 Chrome **`⋮` → 앱 설치(홈 화면에 추가)** · 아이폰은 Safari **공유 → 홈 화면에 추가**

@@ -389,7 +389,7 @@ function renderHelp() {
     ${sec('📲 앱으로 설치 · 오프라인', `<ul><li>${installed ? '✅ 지금 <b>앱으로 실행 중</b>이에요.' : 'Chrome: 위쪽 <b>[설치]</b> 안내 또는 <b>⋮ → 앱 설치</b> · 아이폰 Safari: <b>공유 → 홈 화면에 추가</b>'}</li>
       <li>카카오톡에서 링크를 열면 자동으로 Chrome(아이폰은 Safari)으로 넘어가요.</li><li>새 내용이 추가되면 인터넷이 될 때 앱을 열면 자동으로 업데이트돼요. 진도·모의고사 기록은 그대로 남아요.</li></ul>`)}
     ${sec('💾 기록', `<ul><li>진도, 모의고사 점수, 실습 결과는 이 폰의 이 브라우저에만 저장돼요.</li></ul><div style="margin-top:10px"><button class="btnw" id="reset">모든 기록 지우기</button></div>`)}
-    <p class="muted" style="text-align:center;font-size:13px">7개 장 · SQL 예제 ${CODE.length}개 · 문제 ${BANK.length}개 · 실습 ${TASKS.length}문제<br><a href="https://github.com/sinaboro/sqld-learning-app-" target="_blank" rel="noopener">교안 PDF (GitHub)</a></p>
+    <p class="muted" style="text-align:center;font-size:13px">7개 장 · SQL 예제 ${CODE.length}개 · 문제 ${BANK.length}개 · 실습 ${TASKS.length}문제<br><a href="https://github.com/sinaboro/sqld-learning-app" target="_blank" rel="noopener">교안 PDF (GitHub)</a></p>
   </div>`;
   $('#reset').onclick = () => { if (confirm('진도·모의고사·실습 기록을 모두 지울까요?')) { ['sqld-progress-v1', EK, CUR, TK, 'sqld-task-draft'].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); prog = {}; toast('기록을 지웠어요'); } };
 }
